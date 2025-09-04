@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BarterHub - Trade Without Money</title>
+    <link rel="stylesheet" href="barter.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 BarterHub</h1>
+            <p>Trade items without money - Connect, Exchange, Repeat!</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('browse')">Browse Items</button>
+            <button class="tab-btn" onclick="showTab('add')">Add Item</button>
+            <button class="tab-btn" onclick="showTab('my-items')">My Items</button>
+            <button class="tab-btn" onclick="showTab('offers')">Trade Offers</button>
+            <button class="tab-btn" onclick="showTab('messages')">Messages</button>
+            <button class="tab-btn" onclick="showTab('profile')">Profile</button>
+        </div>
+
+        <!-- Browse Items Tab -->
+        <div id="browse" class="tab-content active">
+            <div class="stats-card">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="totalItems">0</div>
+                        <div>Total Items</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="activeUsers">0</div>
+                        <div>Active Users</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="completedTrades">0</div>
+                        <div>Completed Trades</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-filter">
+                <div class="form-group">
+                    <label>Search Items</label>
+                    <input type="text" id="searchInput" placeholder="Search by name or description..." oninput="filterItems()">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="categoryFilter" onchange="filterItems()">
+                        <option value="">All Categories</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Books">Books</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Home & Garden">Home & Garden</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Toys">Toys</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Sort By</label>
+                    <select id="sortBy" onchange="sortItems()">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="name">Name A-Z</option>
+                        <option value="category">Category</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="itemsGrid" class="items-grid">
+                <!-- Items will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <!-- Add Item Tab -->
+        <div id="add" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: #4a5568;">Add New Item for Barter</h2>
+            <form id="addItemForm">
+                <div class="form-group">
+                    <label>Item Name *</label>
+                    <input type="text" id="itemName" required placeholder="What are you offering?">
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="itemCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Books">Books</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Home & Garden">Home & Garden</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Toys">Toys</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description *</label>
+                    <textarea id="itemDescription" required placeholder="Describe your item in detail..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Condition</label>
+                    <select id="itemCondition">
+                        <option value="New">New</option>
+                        <option value="Like New">Like New</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>What would you like in exchange?</label>
+                    <textarea id="wantedItems" placeholder="Describe what you're looking for..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Your Location</label>
+                    <input type="text" id="itemLocation" placeholder="City, State">
+                </div>
+                <button type="submit" class="btn">Add Item to Barter List</button>
+            </form>
+        </div>
+
+        <!-- My Items Tab -->
+        <div id="my-items" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: #4a5568;">My Listed Items</h2>
+            <div id="myItemsGrid" class="items-grid">
+                <!-- User's items will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Trade Offers Tab -->
+        <div id="offers" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: #4a5568;">Trade Offers Management</h2>
+            
+            <div class="nav-tabs" style="margin-bottom: 20px;">
+                <button class="tab-btn active" onclick="showOfferTab('received')">Received Offers</button>
+                <button class="tab-btn" onclick="showOfferTab('sent')">Sent Offers</button>
+            </div>
+
+            <div id="receivedOffers" class="offers-list">
+                <!-- Received offers will be displayed here -->
+            </div>
+
+            <div id="sentOffers" class="offers-list" style="display: none;">
+                <!-- Sent offers will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div id="messages" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: #4a5568;">Trade Messages</h2>
+            
+            <div class="form-group">
+                <label>Select Conversation</label>
+                <select id="conversationSelect" onchange="loadConversation()">
+                    <option value="">Choose a conversation...</option>
+                </select>
+            </div>
+
+            <div id="chatContainer" style="display: none;">
+                <div class="chat-box" id="chatMessages"></div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="messageInput" placeholder="Type your message..." style="flex: 1;" onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button class="btn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: #4a5568;">User Profile</h2>
+            
+            <div class="form-group">
+                <label>Display Name</label>
+                <input type="text" id="userName" value="Anonymous User">
+            </div>
+            
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="userEmail" placeholder="your@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="userLocation" placeholder="Your city, state">
+            </div>
+            
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea id="userBio" placeholder="Tell others about yourself..."></textarea>
+            </div>
+
+            <div class="rating-system">
+                <label>Your Rating:</label>
+                <div class="stars">
+                    <span class="star active">★</span>
+                    <span class="star active">★</span>
+                    <span class="star active">★</span>
+                    <span class="star active">★</span>
+                    <span class="star">★</span>
+                </div>
+                <span>4.2/5 (12 reviews)</span>
+            </div>
+            
+            <button class="btn" onclick="saveProfile()">Save Profile</button>
+        </div>
+    </div>
+
+    <!-- Make Offer Modal -->
+    <div id="offerModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('offerModal')">&times;</span>
+            <h3>Make Trade Offer</h3>
+            <form id="offerForm">
+                <div class="form-group">
+                    <label>Select Your Item to Offer</label>
+                    <select id="offerItemSelect" required>
+                        <option value="">Choose an item...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Additional Message</label>
+                    <textarea id="offerMessage" placeholder="Explain why this is a good trade..."></textarea>
+                </div>
+                <button type="submit" class="btn">Send Offer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Item Details Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('itemModal')">&times;</span>
+            <div id="itemDetails">
+                <!-- Item details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="barter.js"></script>
+</body>
+</html>
